@@ -1,8 +1,9 @@
 from riotwatcher import LolWatcher, ApiError
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
-api_key = 'RGAPI-de02c895-ee45-4fcc-a267-390c4987fcc5'
+api_key = 'RGAPI-6c3bdf80-789e-463b-8f13-6984b19fee1e'
 watcher = LolWatcher(api_key)
 my_region = 'br1'
 
@@ -20,6 +21,7 @@ print(last_match)
 
 match_detail = watcher.match.by_id(my_region, last_match['gameId'])
 
+print(match_detail)
 participants = []
 
 for row in match_detail['participants']:
@@ -31,7 +33,7 @@ for row in match_detail['participants']:
     participants_row['kills'] = row['stats']['kills']
     participants_row['deaths'] = row['stats']['deaths']
     participants_row['assists'] = row['stats']['assists']
-    participants_row['totalDamageDealt'] = row['stats']['totalDamageDealt']
+    # participants_row['totalDamageDealt'] = row['stats']['totalDamageDealt']
     participants_row['goldEarned'] = row['stats']['goldEarned']
     participants_row['champLevel'] = row['stats']['champLevel']
     participants_row['totalMinionsKilled'] = row['stats']['totalMinionsKilled']
@@ -57,3 +59,13 @@ for row in participants:
 
 df = pd.DataFrame(participants)
 print(df)
+ax = df
+ax.plot(kind='bar')
+plt.show()
+'''
+(MID_LANE, SOLO):MIDDLE
+(TOP_LANE, SOLO):TOP
+(JUNGLE, NONE):JUNGLE
+(BOT_LANE, DUO_CARRY):BOTTOM
+(BOT_LANE, DUO_SUPPORT):UTILITY
+'''
