@@ -1,6 +1,4 @@
-from riotwatcher import LolWatcher, ApiError
 import pandas as pd
-import numpy as np
 
 class User:
 
@@ -35,6 +33,9 @@ class User:
             participants.append(participants_row)
 
         df = pd.DataFrame(participants, index=name)
+        kda_values = (df['kills'] + df['assists'])/df['deaths']
+        df['KDA'] = pd.DataFrame(kda_values, index=df.index)
+
         print(df)
 
         return df
