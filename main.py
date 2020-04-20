@@ -14,6 +14,8 @@ class LolDataVisualization:
         user = User('br1', 'Magafo', self.watcher)
         kda_df = user.kda()
         kda_df.plot(kind='bar')
+        dmg_df = user.damage_dealt_mitigated()
+        dmg_df.plot(kind='bar')
         plt.show()
 
 
