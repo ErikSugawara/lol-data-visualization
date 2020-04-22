@@ -58,7 +58,7 @@ class User:
         last_match = self.matches['matches'][0]
         self.match_detail = self.watcher.match.by_id(self.region,
                                                      last_match['gameId'])
-        print(self.match_detail)
+        print(self.match_detail['gameMode'])
         # List of participants name/info
         summoners_name = []
         # Getting names of participants
