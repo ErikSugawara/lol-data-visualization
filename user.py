@@ -22,7 +22,9 @@ class User:
             participants_row['assists'] = row['stats']['assists']
             participants.append(participants_row)
         df = pd.DataFrame(participants, index=self.name)
-        kda_values = (df['kills'] + df['assists'])/df['deaths']
+        # Death column without zero, because of division by zero when death = 0
+        deaths_no_zero = [1 if x == 0 else x for x in df['deaths']]
+        kda_values = (df['kills'] + df['assists'])/deaths_no_zero
         df['KDA'] = pd.DataFrame(kda_values, index=df.index)
         print(df)
         return df
@@ -55,7 +57,7 @@ class User:
         # Getting information about match
         self.matches = self.watcher.match.matchlist_by_account(self.region,
                                                                self.user_info['accountId'])
-        last_match = self.matches['matches'][0]
+        last_match = self.matches['matches'][1]
         self.match_detail = self.watcher.match.by_id(self.region,
                                                      last_match['gameId'])
         print(self.match_detail['gameMode'])
