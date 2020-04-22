@@ -53,6 +53,17 @@ class User:
         print(df)
         return df
 
+    def total_farm(self):
+        participants = []
+        for row in self.match_detail['participants']:
+            participants_row = {}
+            participants_row['Farm'] = row['stats']['totalMinionsKilled']
+            participants.append(participants_row)
+        df = pd.DataFrame(participants, index=self.name)
+        print(df)
+        return df
+
+
     def match_information(self):
         # Getting information about match
         self.matches = self.watcher.match.matchlist_by_account(self.region,
@@ -60,7 +71,7 @@ class User:
         last_match = self.matches['matches'][1]
         self.match_detail = self.watcher.match.by_id(self.region,
                                                      last_match['gameId'])
-        print(self.match_detail['gameMode'])
+        print(self.match_detail)
         # List of participants name/info
         summoners_name = []
         # Getting names of participants

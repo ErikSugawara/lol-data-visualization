@@ -13,13 +13,15 @@ class LolDataVisualization:
     def plot_chart(self):
         user = User('br1', 'hdef', self.watcher)
         kda_df = user.kda()
-        kda_df.plot(kind='bar')
+        kda_df.plot(kind='barh')
         dmg_df = user.damage_dealt_mitigated()
-        dmg_df.plot(kind='bar')
+        dmg_df.plot(kind='barh')
+        farm_df = user.total_farm()
+        farm_df.plot(kind='barh')
         # ARAM Games does not have wards
         if user.match_detail['gameMode'] == 'CLASSIC':
             ward_df = user.ward_score()
-            ward_df.plot(kind='bar')
+            ward_df.plot(kind='barh')
         # TODO : Fix wards on aram games
 
         plt.show()
