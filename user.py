@@ -34,8 +34,10 @@ class User:
         participants = []
         for row in self.match_detail['participants']:
             participants_row = {}
-            participants_row['Total DMG Champions'] = row['stats']['totalDamageDealtToChampions']
-            participants_row['Damage mitigated'] = row['stats']['damageSelfMitigated']
+            damage_dealt = row['stats']['totalDamageDealtToChampions']
+            damage_mitigated = row['stats']['damageSelfMitigated']
+            participants_row['Total DMG Champions'] = damage_dealt
+            participants_row['Damage mitigated'] = damage_mitigated
             participants.append(participants_row)
         df = pd.DataFrame(participants, index=self.name)
         print(df)
@@ -63,12 +65,17 @@ class User:
         print(df)
         return df
 
+    def current_match_information(self):
+        self.current_match = self.watcher.spectator.by_summoner(self.region, self.summonerId)
+        print(self.current_match)
 
     def match_information(self):
         # Getting information about match
+        self.accountId = self.user_info['accountId']
+        self.summonerId = self.user_info['id']
         self.matches = self.watcher.match.matchlist_by_account(self.region,
-                                                               self.user_info['accountId'])
-        last_match = self.matches['matches'][1]
+                                                               self.accountId)
+        last_match = self.matches['matches'][0]
         self.match_detail = self.watcher.match.by_id(self.region,
                                                      last_match['gameId'])
         print(self.match_detail)

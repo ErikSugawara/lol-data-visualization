@@ -7,11 +7,11 @@ from user import User
 class LolDataVisualization:
 
     def __init__(self):
-        api_key = 'RGAPI-06591568-b968-4293-b47a-47ccf334a176'
+        api_key = 'RGAPI-60e701e2-2b18-4559-a056-233247c37852'
         self.watcher = LolWatcher(api_key)
 
     def plot_chart(self):
-        user = User('br1', 'hdef', self.watcher)
+        user = User('br1', 'Jukes', self.watcher)
         kda_df = user.kda()
         kda_df.plot(kind='barh')
         dmg_df = user.damage_dealt_mitigated()
@@ -22,8 +22,8 @@ class LolDataVisualization:
         if user.match_detail['gameMode'] == 'CLASSIC':
             ward_df = user.ward_score()
             ward_df.plot(kind='barh')
-        # TODO : Fix wards on aram games
 
+        user.current_match_information()
         plt.show()
 
 
