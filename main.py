@@ -3,32 +3,37 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from user import User
+from match import Match
 
 class LolDataVisualization:
 
-    def __init__(self):
-        api_key = 'RGAPI-60e701e2-2b18-4559-a056-233247c37852'
+    def __init__(self, api_key):
         self.watcher = LolWatcher(api_key)
 
     def plot_chart(self):
-        user = User('br1', 'Jukes', self.watcher)
-        kda_df = user.kda()
+        user = User('br1', 'hdef', self.watcher)
+        match = Match(user, self.watcher)
+        kda_df = match.kda()
         kda_df.plot(kind='barh')
-        dmg_df = user.damage_dealt_mitigated()
+        dmg_df = match.damage_dealt_mitigated()
         dmg_df.plot(kind='barh')
-        farm_df = user.total_farm()
+        farm_df = match.total_farm()
         farm_df.plot(kind='barh')
         # ARAM Games does not have wards
-        if user.match_detail['gameMode'] == 'CLASSIC':
-            ward_df = user.ward_score()
+        if match.match_detail['gameMode'] == 'CLASSIC':
+            ward_df = match.ward_score()
             ward_df.plot(kind='barh')
 
-        user.current_match_information()
+        try:
+            match.current_match_information()
+        except ApiError:
+            print("The user is not current in a match.")
         plt.show()
 
 
 def main():
-    lol = LolDataVisualization()
+    api_key = 'RGAPI-74bf6ada-4721-4cfc-84a4-d0024ed66a09'
+    lol = LolDataVisualization(api_key)
     lol.plot_chart()
 
 
