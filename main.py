@@ -32,7 +32,7 @@ class LolDataVisualization:
 
 
 def main():
-    api_key = 'RGAPI-74bf6ada-4721-4cfc-84a4-d0024ed66a09'
+    api_key = 'RGAPI-30a7b792-5295-4af5-a135-43c2e12e8158'
     lol = LolDataVisualization(api_key)
     lol.plot_chart()
 

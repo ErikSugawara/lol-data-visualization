@@ -4,7 +4,7 @@ class Match:
 
     def __init__(self, user, watcher):
         self.user = user
-        self.watcher = watcher
+        self.wtr = watcher
         self.match_information()
 
     def kda(self):
@@ -63,17 +63,20 @@ class Match:
         return df
 
     def current_match_information(self):
-        self.current_match = self.watcher.spectator.by_summoner(self.user.region,
-                                                                self.user.summonerId)
+        self.current_match = self.wtr.spectator.by_summoner(self.user.region,
+                                                            self.user.summonerId)
         print(self.current_match)
+
+    def win_match_probability(self):
+        # Parameters: (KDA, Vision Score, Farm, Dmg Dealt/Mitigate) of 5 last games
 
     def match_information(self):
         # Getting information about match
-        self.matches = self.watcher.match.matchlist_by_account(self.user.region,
-                                                               self.user.accountId)
+        self.matches = self.wtr.match.matchlist_by_account(self.user.region,
+                                                           self.user.accountId)
         last_match = self.matches['matches'][0]
-        self.match_detail = self.watcher.match.by_id(self.user.region,
-                                                     last_match['gameId'])
+        self.match_detail = self.wtr.match.by_id(self.user.region,
+                                                 last_match['gameId'])
         print(self.match_detail)
         # List of participants name/info
         summoners_name = []
