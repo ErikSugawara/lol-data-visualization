@@ -2,11 +2,10 @@ import pandas as pd
 
 class Match:
 
-    def __init__(self, user, match_info, watcher):
-        self.user = user
-        self.wtr = watcher
-        self.match_info = match_info
-        self.match_detail()
+    def __init__(self, match_detail):
+        self.match_detail = match_detail
+        self.players_name()
+
 
     def kda(self):
         '''
@@ -62,12 +61,7 @@ class Match:
         print(df)
         return df
 
-    def match_detail(self):
-        # Getting information about match
-
-        match_id = self.match_info['gameId']
-        self.match_detail = self.wtr.match.by_id(self.user.region, match_id)
-        print(self.match_detail)
+    def players_name(self):
         # List of participants name/info
         summoners_name = []
         # Getting names of participants

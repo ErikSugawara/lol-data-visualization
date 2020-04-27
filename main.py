@@ -11,13 +11,19 @@ class LolDataVisualization:
         self.watcher = LolWatcher(api_key)
 
     def plot_chart(self):
+        # Information about user and match
         user = User('br1', 'hdef', self.watcher)
         match_info = user.matches[0]
-        match = Match(user, match_info, self.watcher)
+        match_id = match_info['gameId']
+        match_detail = self.watcher.match.by_id(user.region, match_id)
+        match = Match(match_detail)
+        # KDA
         kda_df = match.kda()
         kda_df.plot(kind='barh')
+        # Damage dealt/mitigated
         dmg_df = match.damage_dealt_mitigated()
         dmg_df.plot(kind='barh')
+        # Total Farm
         farm_df = match.total_farm()
         farm_df.plot(kind='barh')
         # ARAM Games does not have wards
