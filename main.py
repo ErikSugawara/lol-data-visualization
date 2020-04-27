@@ -12,7 +12,8 @@ class LolDataVisualization:
 
     def plot_chart(self):
         user = User('br1', 'hdef', self.watcher)
-        match = Match(user, self.watcher)
+        match_info = user.matches[0]
+        match = Match(user, match_info, self.watcher)
         kda_df = match.kda()
         kda_df.plot(kind='barh')
         dmg_df = match.damage_dealt_mitigated()
@@ -25,14 +26,14 @@ class LolDataVisualization:
             ward_df.plot(kind='barh')
 
         try:
-            match.current_match_information()
+            user.current_match_information()
         except ApiError:
             print("The user is not current in a match.")
         plt.show()
 
 
 def main():
-    api_key = 'RGAPI-30a7b792-5295-4af5-a135-43c2e12e8158'
+    api_key = 'RGAPI-a0d8b830-5989-464b-a27c-0e7faf16e310'
     lol = LolDataVisualization(api_key)
     lol.plot_chart()
 

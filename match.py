@@ -2,16 +2,16 @@ import pandas as pd
 
 class Match:
 
-    def __init__(self, user, watcher):
+    def __init__(self, user, match_info, watcher):
         self.user = user
         self.wtr = watcher
-        self.match_information()
+        self.match_info = match_info
+        self.match_detail()
 
     def kda(self):
         '''
         Returns Dataframe of KDA in participant match
         '''
-        # Getting KDA
         participants = []
         for row in self.match_detail['participants']:
             participants_row = {}
@@ -62,21 +62,11 @@ class Match:
         print(df)
         return df
 
-    def current_match_information(self):
-        self.current_match = self.wtr.spectator.by_summoner(self.user.region,
-                                                            self.user.summonerId)
-        print(self.current_match)
-
-    def win_match_probability(self):
-        # Parameters: (KDA, Vision Score, Farm, Dmg Dealt/Mitigate) of 5 last games
-
-    def match_information(self):
+    def match_detail(self):
         # Getting information about match
-        self.matches = self.wtr.match.matchlist_by_account(self.user.region,
-                                                           self.user.accountId)
-        last_match = self.matches['matches'][0]
-        self.match_detail = self.wtr.match.by_id(self.user.region,
-                                                 last_match['gameId'])
+
+        match_id = self.match_info['gameId']
+        self.match_detail = self.wtr.match.by_id(self.user.region, match_id)
         print(self.match_detail)
         # List of participants name/info
         summoners_name = []
