@@ -12,7 +12,7 @@ class LolDataVisualization:
 
     def plot_chart(self):
         # Information about user and match
-        user = User('br1', 'hdef', self.watcher)
+        user = User('br1', 'YODlNHA RAIZ 1V9', self.watcher)
         match_info = user.matches[0]
         match_id = match_info['gameId']
         match_detail = self.watcher.match.by_id(user.region, match_id)
@@ -33,13 +33,14 @@ class LolDataVisualization:
 
         try:
             user.current_match_information()
+            user.win_lane_probability()
         except ApiError:
             print("The user is not current in a match.")
         plt.show()
 
 
 def main():
-    api_key = 'RGAPI-a0d8b830-5989-464b-a27c-0e7faf16e310'
+    api_key = 'RGAPI-e11e6c8d-53c6-4089-93e4-dddd9c347df5'
     lol = LolDataVisualization(api_key)
     lol.plot_chart()
 

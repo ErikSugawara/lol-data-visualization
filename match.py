@@ -6,7 +6,6 @@ class Match:
         self.match_detail = match_detail
         self.players_name()
 
-
     def kda(self):
         '''
         Returns Dataframe of KDA in participant match
@@ -65,10 +64,13 @@ class Match:
         # List of participants name/info
         summoners_name = []
         # Getting names of participants
+        self.participants_id = []
         for row in self.match_detail['participantIdentities']:
             names_row = {}
             names_row['Name'] = row['player']['summonerName']
+            account_id = row['player']['accountId']
+            self.participants_id.append(account_id)
             summoners_name.append(names_row)
         self.participants_name = [x['Name'] for x in summoners_name]
-
+        print(self.participants_id)
 

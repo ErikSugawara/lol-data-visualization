@@ -15,7 +15,7 @@ class User:
     def current_match_information(self):
         self.current_match = self.watcher.spectator.by_summoner(self.region,
                                                                 self.summonerId)
-        print(self.current_match)
+        self.participants_information()
 
     def win_match_probability(self):
         # Parameters: (KDA, Vision Score, Farm, Dmg Dealt/Mitigate)
@@ -25,8 +25,21 @@ class User:
     # TODO: Get data from last five games, using current role and game mode classic.
     # TODO: Function to get average of each paramenter in a match
     def win_lane_probability(self):
-        participants_matches = []
-        for participant in self.participants_name:
-            matches = {}
+        pass
 
+    def participants_information(self):
+        self.current_participants = []
+        self.current_participants_info = []
+        self.matches_participants = []
+        for row in self.current_match['participants']:
+            self.current_participants.append(row['summonerName'])
+
+        for participant_name in self.current_participants:
+            participant_info = self.watcher.summoner.by_name(self.region, participant_name)
+            self.current_participants_info.append(participant_info)
+
+        for participant_id in self.current_participants_info:
+            matches = self.watcher.match.matchlist_by_account(self.region, participant_id['accountId'])['matches']
+            self.matches_participants.append(matches)
+        print(self.current_participants_info)
 
