@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from user import User
 from match import Match
+from current_match import CurrentMatch
 
 class LolDataVisualization:
 
@@ -12,7 +13,7 @@ class LolDataVisualization:
 
     def plot_chart(self):
         # Information about user and match
-        user = User('br1', 'YODlNHA RAIZ 1V9', self.watcher)
+        user = User('br1', 'hdef', self.watcher)
         match_info = user.matches[0]
         match_id = match_info['gameId']
         match_detail = self.watcher.match.by_id(user.region, match_id)
@@ -31,18 +32,18 @@ class LolDataVisualization:
             ward_df = match.ward_score()
             ward_df.plot(kind='barh')
 
-        try:
-            user.current_match_information()
-            user.win_lane_probability()
-        except ApiError:
-            print("The user is not current in a match.")
         plt.show()
 
+    def plot_kda_user_matches(self):
+        user = User('br1', 'hdef', self.watcher)
+        print(user.games_played_in_lane())
+        user.kda_all_matches()
 
 def main():
-    api_key = 'RGAPI-e11e6c8d-53c6-4089-93e4-dddd9c347df5'
+    api_key = 'RGAPI-04a32854-ca69-42bf-aaae-bfd06b6a3b31'
     lol = LolDataVisualization(api_key)
-    lol.plot_chart()
+    # lol.plot_chart()
+    lol.plot_kda_user_matches()
 
 
 if __name__ == "__main__":

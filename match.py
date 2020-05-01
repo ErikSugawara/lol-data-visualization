@@ -7,9 +7,6 @@ class Match:
         self.players_name()
 
     def kda(self):
-        '''
-        Returns Dataframe of KDA in participant match
-        '''
         participants = []
         for row in self.match_detail['participants']:
             participants_row = {}
