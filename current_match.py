@@ -22,10 +22,3 @@ class CurrentMatch:
 
         print(self.current_match)
 
-    # Parameters: (KDA, Vision Score, Farm, Dmg Dealt/Mitigate)
-    # TODO: Get data from last five games, using current role
-    # and game mode classic.
-    # TODO: Function to get average of each paramenter in a match
-
-    def win_lane_probability(self):
-        pass

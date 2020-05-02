@@ -1,4 +1,5 @@
 import pandas as pd
+import datetime as dt
 
 class User:
 
@@ -13,12 +14,16 @@ class User:
                                                                self.accountId
                                                                )['matches']
     def games_played_in_lane(self):
+        '''
+        Include ARAM Games as None
+        Bottom = ADC/Support
+        '''
         top = 0
         jungle = 0
         mid = 0
         bottom = 0
         none = 0
-
+        lanes = ['Top', 'Jungle', 'Mid', 'Bottom', 'None']
         for match in self.matches:
             if match['lane'] == 'TOP':
                 top += 1
@@ -31,17 +36,47 @@ class User:
             if match['lane'] == 'NONE':
                 none += 1
 
-        return [top, jungle, mid, bottom, none]
+        df = pd.DataFrame([top, jungle, mid, bottom, none], index=lanes)
+        return df
 
 
-    def kda_all_matches(self):
-        matches_detail = []
-        print(self.matches)
-        for match in self.matches[:1]:
+    def kda_matches_classic(self):
+        '''Returns a dataframe of user kda on ten last games in classic mode'''
+        kda_detail = []
+        # matches_date = []
+        for match in self.matches[:10]:
             match_id = match['gameId']
-            detail = self.watcher.match.by_id(self.region, match_id)
-            matches_detail.append(detail)
-            print(detail)
+            match_info = self.watcher.match.by_id(self.region, match_id)
+            if self.is_valid_match(match_info) is True:
+                kda_detail.append(self.kda(match_info))
+                # matches_date.append(dt.datetime.fromtimestamp(match_info['gameCreation']).isoformat())
+        df = pd.concat(kda_detail)
+        print(df)
+        return df
+
+    def kda(self, match_detail):
+        user_kda = []
+        user_id = self.user_id_match(match_detail)
+        for row in match_detail['participants']:
+            if row['participantId'] == user_id:
+                kda_row = {}
+                kda_row['kills'] = row['stats']['kills']
+                kda_row['deaths'] = row['stats']['deaths']
+                kda_row['assists'] = row['stats']['assists']
+                user_kda.append(kda_row)
+        df = pd.DataFrame(user_kda)
+        # Death column without zero, because of division by zero when death = 0
+        deaths_no_zero = [1 if x == 0 else x for x in df['deaths']]
+        kda_values = (df['kills'] + df['assists'])/deaths_no_zero
+        df['KDA'] = pd.DataFrame(kda_values, index=df.index)
+        print(df)
+        return df
+
+    def user_id_match(self, match_detail):
+        # Getting user id in a match
+        for row in match_detail['participantIdentities']:
+            if row['player']['summonerName'] == self.name:
+                return row['participantId']
 
     def is_valid_match(self, match):
         if (match['gameMode'] == 'CLASSIC' and
