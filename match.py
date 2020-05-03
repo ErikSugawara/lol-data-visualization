@@ -19,7 +19,6 @@ class Match:
         deaths_no_zero = [1 if x == 0 else x for x in df['deaths']]
         kda_values = (df['kills'] + df['assists'])/deaths_no_zero
         df['KDA'] = pd.DataFrame(kda_values, index=df.index)
-        print(df)
         return df
 
     def damage_dealt_mitigated(self):
@@ -32,7 +31,6 @@ class Match:
             participants_row['Damage mitigated'] = damage_mitigated
             participants.append(participants_row)
         df = pd.DataFrame(participants, index=self.participants_name)
-        print(df)
         return df
 
     def ward_score(self):
@@ -44,7 +42,6 @@ class Match:
             participants_row['Vision Score'] = row['stats']['visionScore']
             participants.append(participants_row)
         df = pd.DataFrame(participants, index=self.participants_name)
-        print(df)
         return df
 
     def total_farm(self):
@@ -54,7 +51,6 @@ class Match:
             participants_row['Farm'] = row['stats']['totalMinionsKilled']
             participants.append(participants_row)
         df = pd.DataFrame(participants, index=self.participants_name)
-        print(df)
         return df
 
     def players_name(self):
@@ -69,5 +65,4 @@ class Match:
             self.participants_id.append(account_id)
             summoners_name.append(names_row)
         self.participants_name = [x['Name'] for x in summoners_name]
-        print(self.participants_id)
 

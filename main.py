@@ -35,13 +35,14 @@ class LolDataVisualization:
         plt.show()
 
     def plot_kda_user_matches(self):
-        user = User('br1', 'Foxch', self.watcher)
+        user = User('br1', 'hdef', self.watcher)
         user.games_played_in_lane().plot(kind='bar')
-        user.kda_matches_classic().plot(kind='bar')
+        user.kda_classic_matches().plot(kind='bar')
+        user.dmg_classic_matches().plot(kind='bar')
         plt.show()
 
 def main():
-    api_key = 'RGAPI-348b49ce-b238-4a51-8716-9747ed5870cd'
+    api_key = 'RGAPI-2008d312-2c94-4b83-bedb-b6b99c8e4d63'
     lol = LolDataVisualization(api_key)
     # lol.plot_chart()
     lol.plot_kda_user_matches()
@@ -49,4 +50,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
