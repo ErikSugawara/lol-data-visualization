@@ -14,6 +14,8 @@ class User:
         self.matches = self.watcher.match.matchlist_by_account(self.region,
                                                                self.accountId
                                                                )['matches']
+        self.latest_matches_detail()
+
     def games_played_in_lane(self):
         '''
         None = ARAM and events which doesn't have a lane.
@@ -44,35 +46,67 @@ class User:
     def kda_classic_matches(self):
         '''Returns a dataframe of the user kda on his ten latest games in classic mode'''
         kda_detail = []
-        for match in self.matches[:10]:
-            match_id = match['gameId']
-            match_detail = self.watcher.match.by_id(self.region, match_id)
-            if self.is_valid_match(match_detail) is True:
-                match = Match(match_detail)
-                user_kda = match.kda().loc[self.name, ['assists', 'deaths', 'kills', 'KDA']]
-                # TODO: Verify proper way to do this.
-                kda_detail.append(pd.DataFrame(user_kda).T.reset_index())
+        columns = ['assists', 'deaths', 'kills','KDA']
+        for match_detail in self.latest_matches:
+            match = Match(match_detail)
+            user_kda = match.kda().loc[self.name, columns]
+            # TODO: Verify proper way to do this.
+            kda_detail.append(pd.DataFrame(user_kda).T.reset_index())
         df = pd.concat(kda_detail)
         return df
 
     def dmg_classic_matches(self):
         dmg_detail = []
+        columns = ['Total DMG Champions', 'Damage mitigated']
+        for match_detail in self.latest_matches:
+            match = Match(match_detail)
+            user_dmg = match.damage_dealt_mitigated().loc[self.name, columns]
+            # TODO: Verify proper way to do this.
+            dmg_detail.append(pd.DataFrame(user_dmg).T.reset_index())
+        df = pd.concat(dmg_detail)
+        return df
+
+    def ward_classic_matches(self):
+        ward_detail = []
+        columns = ['Placed', 'Removed', 'Vision Score']
+        for match_detail in self.latest_matches:
+            match = Match(match_detail)
+            user_ward = match.ward_score().loc[self.name, columns]
+            # TODO: Verify proper way to do this.
+            ward_detail.append(pd.DataFrame(user_ward).T.reset_index())
+        df = pd.concat(ward_detail)
+        return df
+
+    def farm_classic_matches(self):
+        farm_detail = []
+        for match_detail in self.latest_matches:
+            match = Match(match_detail)
+            user_farm = match.total_farm().loc[self.name, ['Farm']]
+            # TODO: Verify proper way to do this.
+            farm_detail.append(pd.DataFrame(user_farm).T.reset_index())
+        df = pd.concat(farm_detail)
+        return df
+
+
+    def latest_matches_detail(self):
+        '''
+        Get the latest ten matches in a ranked game.
+        Used to preload matches, because of request limit on API server.
+        '''
+        self.latest_matches = []
         for match in self.matches[:10]:
             match_id = match['gameId']
             match_detail = self.watcher.match.by_id(self.region, match_id)
             if self.is_valid_match(match_detail) is True:
-                match = Match(match_detail)
-                user_dmg = match.damage_dealt_mitigated().loc[self.name, ['Total DMG Champions',
-                                                                          'Damage mitigated']]
-                # TODO: Verify proper way to do this.
-                dmg_detail.append(pd.DataFrame(user_dmg).T.reset_index())
-        df = pd.concat(dmg_detail)
-        return df
+                self.latest_matches.append(match_detail)
 
     def is_valid_match(self, match):
+        '''
+        Verify if a match is a Ranked Game with more than 15 minutes duration
+        '''
         if (match['gameMode'] == 'CLASSIC' and
             match['gameType'] == 'MATCHED_GAME' and
             match['gameDuration'] >= 900):
-            return True
+           return True
         return False
 
