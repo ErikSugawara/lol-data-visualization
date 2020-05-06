@@ -1,5 +1,5 @@
 import pandas as pd
-import datetime as dt
+from datetime import datetime
 from match import Match
 
 class User:
@@ -44,15 +44,19 @@ class User:
 
     # TODO: Add game duration parameter.
     def kda_classic_matches(self):
-        '''Returns a dataframe of the user kda on his ten latest games in classic mode'''
+        '''
+        Returns a dataframe of the user kda
+        on his ten latest games in classic mode
+        '''
         kda_detail = []
         columns = ['assists', 'deaths', 'kills','KDA']
         for match_detail in self.latest_matches:
             match = Match(match_detail)
             user_kda = match.kda().loc[self.name, columns]
             # TODO: Verify proper way to do this.
-            kda_detail.append(pd.DataFrame(user_kda).T.reset_index())
+            kda_detail.append(pd.DataFrame(user_kda).T.reset_index(drop=True))
         df = pd.concat(kda_detail)
+        df.index = self.latest_matches_dates
         return df
 
     def dmg_classic_matches(self):
@@ -62,8 +66,10 @@ class User:
             match = Match(match_detail)
             user_dmg = match.damage_dealt_mitigated().loc[self.name, columns]
             # TODO: Verify proper way to do this.
-            dmg_detail.append(pd.DataFrame(user_dmg).T.reset_index())
+            dmg_detail.append(pd.DataFrame(user_dmg).T.reset_index(drop=True))
         df = pd.concat(dmg_detail)
+        df.index = self.latest_matches_dates
+
         return df
 
     def ward_classic_matches(self):
@@ -73,8 +79,10 @@ class User:
             match = Match(match_detail)
             user_ward = match.ward_score().loc[self.name, columns]
             # TODO: Verify proper way to do this.
-            ward_detail.append(pd.DataFrame(user_ward).T.reset_index())
+            ward_detail.append(pd.DataFrame(user_ward).T.reset_index(drop=True))
         df = pd.concat(ward_detail)
+        df.index = self.latest_matches_dates
+
         return df
 
     def farm_classic_matches(self):
@@ -83,10 +91,11 @@ class User:
             match = Match(match_detail)
             user_farm = match.total_farm().loc[self.name, ['Farm']]
             # TODO: Verify proper way to do this.
-            farm_detail.append(pd.DataFrame(user_farm).T.reset_index())
+            farm_detail.append(pd.DataFrame(user_farm).T.reset_index(drop=True))
         df = pd.concat(farm_detail)
-        return df
+        df.index = self.latest_matches_dates
 
+        return df
 
     def latest_matches_detail(self):
         '''
@@ -94,10 +103,14 @@ class User:
         Used to preload matches, because of request limit on API server.
         '''
         self.latest_matches = []
-        for match in self.matches[:10]:
+        self.latest_matches_dates = []
+        for match in self.matches[:5]:
             match_id = match['gameId']
             match_detail = self.watcher.match.by_id(self.region, match_id)
             if self.is_valid_match(match_detail) is True:
+                timestamp = (match['timestamp']/1000)
+                date = datetime.fromtimestamp(timestamp).date()
+                self.latest_matches_dates.append(date)
                 self.latest_matches.append(match_detail)
 
     def is_valid_match(self, match):
