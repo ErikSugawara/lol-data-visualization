@@ -35,12 +35,12 @@ class LolDataVisualization:
         plt.show()
 
     def plot_kda_user_matches(self):
-        user = User('br1', 'jean mage', self.watcher)
+        user = User('br1', 'Magafo', self.watcher)
         user.kda_classic_matches().plot(kind='bar')
         plt.show()
 
 def main():
-    api_key = 'RGAPI-ef3bb320-a132-4d81-9b6f-40be258dd66a'
+    api_key = ''
     lol = LolDataVisualization(api_key)
     # lol.plot_chart()
     lol.plot_kda_user_matches()
